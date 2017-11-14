@@ -214,7 +214,7 @@ public void umcLoginByType(final String appId,
 | appId     | String        | 应用的AppID                                 |
 | appkey    | String        | 应用密钥                                     |
 | loginType | String        | 登录类型，AuthnHelper.UMC_LOGIN_DISPLAY       |
-| authType  | String        | 认证类型,目前支持三种认证类型:<br />1.短信验证码：AuthnHelper.AUTH_TYPE_DYNAMIC_SMS<br />2.网关鉴权：AuthnHelper.AUTH_TYPE_WAP<br />3.短信上行：AuthnHelper.AUTH_TYPE_SMS<br />（开发者可单独选择其中一种认证类型，也可以用“+”号组合同时使用三种认证类型，SDK登录认证优先级顺序为：网关鉴权 → 短信上行 → 短信验证码） <br />示例：AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_DYNAMIC_SMS |
+| authType  | String        | 认证类型,目前支持三种认证类型:<br />1.短信验证码：AuthnHelper.AUTH_TYPE_DYNAMIC_SMS（短信验证码关闭时，用户授权页右上角“切换账号”按钮将隐藏<br />2.网关鉴权：AuthnHelper.AUTH_TYPE_WAP<br />3.短信上行：AuthnHelper.AUTH_TYPE_SMS<br />（开发者可单独选择其中一种认证类型，也可以用“+”号组合同时使用三种认证类型，SDK登录认证优先级顺序为：网关鉴权 → 短信上行 → 短信验证码） <br />示例：AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_DYNAMIC_SMS |
 | listener  | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
 
 </br>
@@ -316,6 +316,30 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
     "desc": "true",
 }
 ```
+
+## 2.3. 授权页界面配置说明
+
+SDK登录授权页支持部分元素开发者自定义</br>
+
+###2.3.1. 标题
+
+SDK自动读取APP名称，如航班管家，标题栏显示的文字内容为“登录航班管家”
+
+###2.3.2. 自定义logo 
+
+开发者自定义logo时，需考虑终端适配问题
+
+![logo](image/logo.png)
+
+### 2.3.3. 登录按钮文案
+
+![button-text](image/button-text.png)
+
+### 2.3.4. 登录按钮颜色
+
+![button-color](image/button-color.png)
+
+
 
 
 
@@ -444,38 +468,38 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
 
 使用SDK时，SDK会在认证结束后将结果回调给开发者，其中结果为JSONObject对象，其中resultCode为结果响应码，103000代表成功，其他为失败。成功时在根据token字段取出身份标识。失败时根据resultCode定位失败原因。
 
-| 编码     | 返回码描述                |
-| ------ | -------------------- |
-| 103000 | 成功                   |
-| 102101 | 无网络                  |
-| 102102 | 网络异常                 |
-| 102223 | 数据解析异常               |
-| 102121 | 用户取消认证               |
-| 102505 | 业务未注册                |
-| 102506 | 请求出错                 |
-| 102507 | 请求超时                 |
-| 102201 | 自动登陆失败               |
-| 102202 | 应用签名失败               |
-| 102203 | 输入参数错误               |
-| 102204 | 正在gettoken处理         |
-| 102210 | 指定号码非本机号码            |
-| 102211 | 短信验证码验证成功后返回随机码为空    |
-| 102222 | http响应头中没有结果码        |
-| 102299 | other failed         |
-| 102302 | 调用service超时          |
-| 103117 | mac异常 macError       |
-| 103200 | ks无需更新               |
-| 103203 | 缓存用户不存在              |
-| 200001 | imsi为空，跳到短信验证码登录     |
-| 200002 | imsi为空，没有短信验证码登录功能   |
-| 200003 | 复用中间件首次登录            |
-| 200004 | 复用中间件二次登录            |
-| 200005 | 用户未授权                |
-| 200006 | 用户未授权                |
-| 200007 | 不支持的认证方式 跳到短信验证码登录   |
-| 200008 | 不支持的认证方式 没有短信验证码登录功能 |
-| 200009 | 应用合法性校验失败            |
-| 200010 | imsi获取失败或者没有sim卡，预取号失败            |
+| 编码     | 返回码描述                  |
+| ------ | ---------------------- |
+| 103000 | 成功                     |
+| 102101 | 无网络                    |
+| 102102 | 网络异常                   |
+| 102223 | 数据解析异常                 |
+| 102121 | 用户取消认证                 |
+| 102505 | 业务未注册                  |
+| 102506 | 请求出错                   |
+| 102507 | 请求超时                   |
+| 102201 | 自动登陆失败                 |
+| 102202 | 应用签名失败                 |
+| 102203 | 输入参数错误                 |
+| 102204 | 正在gettoken处理           |
+| 102210 | 指定号码非本机号码              |
+| 102211 | 短信验证码验证成功后返回随机码为空      |
+| 102222 | http响应头中没有结果码          |
+| 102299 | other failed           |
+| 102302 | 调用service超时            |
+| 103117 | mac异常 macError         |
+| 103200 | ks无需更新                 |
+| 103203 | 缓存用户不存在                |
+| 200001 | imsi为空，跳到短信验证码登录       |
+| 200002 | imsi为空，没有短信验证码登录功能     |
+| 200003 | 复用中间件首次登录              |
+| 200004 | 复用中间件二次登录              |
+| 200005 | 用户未授权                  |
+| 200006 | 用户未授权                  |
+| 200007 | 不支持的认证方式 跳到短信验证码登录     |
+| 200008 | 不支持的认证方式 没有短信验证码登录功能   |
+| 200009 | 应用合法性校验失败              |
+| 200010 | imsi获取失败或者没有sim卡，预取号失败 |
 
 </br>
 
