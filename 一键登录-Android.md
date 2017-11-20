@@ -13,7 +13,7 @@ sdk技术问题沟通QQ群：609994083
 
 ## 1.2. 新建工程并导入SDK的jar文件
 
-1. 将`CMCCSSOSDK_*.jar`拷贝到应用工程的libs目录下，如没有该目录，可新建；
+1. 将`quick_login_android_5.2.0**.jar`拷贝到应用工程的libs目录下，如没有该目录，可新建；
 2. 将sdk所需要的证书文件`clientCert.crt`、`serverPublicKey.pem`拷贝到项目`assets`目录下。
 
 ![爱奇艺专用图-13](image/1.png)
