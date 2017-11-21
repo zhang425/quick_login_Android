@@ -220,12 +220,14 @@ public void umcLoginByType(final String appId,
 
 OnGetTokenComplete的参数JSONObject，含义如下：
 
-| 字段         | 类型     | 含义                                       |
-| ---------- | ------ | ---------------------------------------- |
-| resultCode | Int    | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码       |
-| resultDesc | String | 失败时返回：返回错误码说明                            |
-| token      | String | 成功时返回：身份标识，字符串形式的token，应用将该token经应用侧平台向统一认证平台请求认证 |
-| openId     | String | 成功时返回：用户身份唯一标识                           |
+| 字段          | 类型     | 含义                                       |
+| ----------- | ------ | ---------------------------------------- |
+| resultCode  | Int    | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码       |
+| resultDesc  | String | 失败时返回：返回错误码说明                            |
+| authType    | String | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 |
+| authTypeDec | String | 认证类型描述，对应authType                        |
+| token       | String | 成功时返回：身份标识，字符串形式的token，应用将该token经应用侧平台向统一认证平台请求认证 |
+| openId      | String | 成功时返回：用户身份唯一标识                           |
 
 </br>
 
@@ -375,41 +377,32 @@ SDK自动读取APP名称，如航班管家，标题栏显示的文字内容为�
 | msgid         |  2   | string |  必选  | 标识请求的随机数即可(1-36位)                        |
 | systemtime    |  2   | string |  必选  | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
 | strictcheck   |  2   | string |  必选  | 验证源ip合法性，填写”1”，统一认证会校验sourceid与出口ip对应关系（ip 地址的配置方法请参考接入流程文档中`配置业务服务端地址`相关操作) |
-| sourceid      |  2   | string |  可选  | 业务集成统一认证的标识，应用接入后可获取                     |
 | ssotosourceid |  2   | string |  可选  | 单点登录时使用，填写被登录业务的sourceid                 |
-| appid         |  2   | string |  可选  | 业务在统一认证申请的应用id                           |
-| apptype       |  2   | string |  可选  | 1:BOSS<br />2:web<br />3:wap<br />4:pc客户端<br />5:手机客户端 |
+| appid         |  2   | string |  必选  | 业务在统一认证申请的应用id                           |
+| apptype       |  2   | string |  必选  | 1:BOSS<br />2:web<br />3:wap<br />4:pc客户端<br />5:手机客户端 |
 | expandparams  |  2   | string | 扩展参数 | map(key,value)                           |
-| body          |  1   |        |  可选  |                                          |
-| token         |  2   | string |  可选  | 需要解析的凭证值。                                |
+| body          |  1   |        |  必选  |                                          |
+| token         |  2   | string |  必选  | 需要解析的凭证值。                                |
 
 </br>
 
 **响应参数**
 
-| 参数                  | 层级   | 类型     | 约束   | 说明                                       |
-| ------------------- | ---- | ------ | ---- | ---------------------------------------- |
-| header              | 1    |        | 必选   |                                          |
-| version             | 2    | string | 必选   | 1.0                                      |
-| inresponseto        | 2    | string | 必选   | 对应的请求消息中的msgid                           |
-| systemtime          | 2    | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| resultcode          | 2    | string | 必选   | 返回码                                      |
-| body                | 1    |        | 必选   |                                          |
-| pcid（无）                | 2    | string | 必选   | 伪码id                                     |
-| usessionid（无）          | 2    | string | 可选   | 暂忽略                                      |
-| openid（无）              | 2    | string | 可选   | 用户统一账号的系统标识                              |
-| andid（无）               | 2    | string | 可选   | 用户的“和ID”                                 |
-| msisdn              | 2    | string | 可选   | 表示手机号码                                   |
-| email（无）               | 2    | string | 可选   | 表示邮箱地址                                   |
-| loginidtype         | 2    | string | 可选   | 登录使用的用户标识：<br />0:手机号码<br />1：邮箱         |
-| msisdntype          | 2    | string | 可选   | 手机号码的归属运营商<br />0:中国移动<br />1:中国电信<br />2:中国联通<br />99:未知的异网手机号码 |
-| province（无）            | 2    | string | 可选   | 用户所属省份(暂无)                               |
-| authtype            | 2    | string | 可选   | 认证方式，取值参见附录1 认证方法标识                      |
-| authtime            | 2    | string | 可选   | 统一认证平台认证用户的时间                            |
-| lastactivetime      | 2    | string | 可选   | 暂无                                       |
-| relateToAndPassport（无） | 2    | string | 可选   | 是否已经关联到统一账号，暂无用处                         |
-| fromsourceid        | 2    | string | 可选   | 来源sourceid（即签发token sourceid）            |
-| tosourceid（无）          | 2    | string | 可选   | 目的sourceid（即被登录业务sourceid）               |
+| 参数             | 层级   | 类型     | 约束   | 说明                                       |
+| -------------- | ---- | ------ | ---- | ---------------------------------------- |
+| header         | 1    |        | 必选   |                                          |
+| version        | 2    | string | 必选   | 1.0                                      |
+| inresponseto   | 2    | string | 必选   | 对应的请求消息中的msgid                           |
+| systemtime     | 2    | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| resultcode     | 2    | string | 必选   | 返回码                                      |
+| body           | 1    |        | 必选   |                                          |
+| msisdn         | 2    | string | 可选   | 表示手机号码                                   |
+| loginidtype    | 2    | string | 可选   | 登录使用的用户标识：<br />0：手机号码<br />1：邮箱         |
+| msisdntype     | 2    | string | 可选   | 手机号码的归属运营商<br />0:中国移动<br />1:中国电信<br />2:中国联通<br />99:未知的异网手机号码 |
+| authtype       | 2    | string | 可选   | 认证方式：</br>WAPGW:网关鉴权；</br>SMSGW:短信验证码鉴权；</br>UPAndPassport:Wifi网关鉴权 |
+| authtime       | 2    | string | 可选   | 统一认证平台认证用户的时间                            |
+| lastactivetime | 2    | string | 可选   | 暂无                                       |
+| fromsourceid   | 2    | string | 可选   | 来源sourceid（即签发token sourceid）            |
 
 </br>
 
@@ -491,8 +484,8 @@ SDK自动读取APP名称，如航班管家，标题栏显示的文字内容为�
 | 200002 | imsi为空，没有短信验证码登录功能     |
 | 200003 | 复用中间件首次登录              |
 | 200004 | 复用中间件二次登录              |
-| 200005 | 用户未授权READ_PHONE_STATE                  |
-| 200006 | 用户未授权SEND_SMS                  |
+| 200005 | 用户未授权READ_PHONE_STATE  |
+| 200006 | 用户未授权SEND_SMS          |
 | 200007 | 不支持的认证方式 跳到短信验证码登录     |
 | 200008 | 不支持的认证方式 没有短信验证码登录功能   |
 | 200009 | 应用合法性校验失败              |
