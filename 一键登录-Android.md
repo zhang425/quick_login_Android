@@ -327,7 +327,7 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
 **原型**
 
 ```java
-public void umcLoginPre(final String appId, 
+public void getTokenImp(final String appId, 
             final String appKey,
             final TokenListener listener)
 ```
