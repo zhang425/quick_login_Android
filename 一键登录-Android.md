@@ -171,6 +171,7 @@ public AuthnHelper (Context context)
 **openId：**每个APP每个手机号码对应唯一的openId。</br>
 
 **临时凭证token：**开发者服务端可凭临时凭证token通过3.1获取用户信息接口获取用户手机号码。
+**登录类型分显式登录（一键登录）和隐式登录2个类型。
 
 </br>
 
@@ -313,6 +314,69 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
 {
     "resultCode": "103000",
     "desc": "true",
+}
+```
+### 2.2.3. 隐式登录
+
+#### 2.2.3.1. 方法描述
+
+用户打开APP，直接完成登录，不需要用户确认，仅提供伪码给业务侧，无法获取 用户手机号码，PS：不支持短信上行。
+
+</br>
+
+**原型**
+
+```java
+public void umcLoginPre(final String appId, 
+            final String appKey,
+            final TokenListener listener)
+```
+
+</br>
+
+#### 2.2.3.2. 参数说明
+
+**请求参数**
+
+| 参数       | 类型            | 说明                                       |
+| :------- | :------------ | :--------------------------------------- |
+| appId    | String        | 应用的AppID                                 |
+| appkey   | String        | 应用密钥                                     |
+| listener | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
+
+</br>
+
+**响应参数**
+
+OnGetTokenComplete的参数JSONObject，含义如下：
+
+| 字段         | 类型      | 含义                                 |
+| ---------- | ------- | ---------------------------------- |
+| resultCode | Int     | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
+| authType   | Int | 登录类型。                      |
+| authTypeDes   | String | 登录类型中文描述。                      |
+| openId   | String | 成功返回:用户身份唯一标识。                      |
+| token   | String | 成功返回:临时凭证。                      |
+
+</br>
+
+#### 2.2.3.3. 示例
+
+**请求示例代码**
+
+```java
+mAuthnHelper.getTokenImp(Constant.APP_ID, Constant.APP_KEY,mListener);
+```
+
+**响应示例代码**
+
+```
+{
+    "resultCode": "103000",
+    "authType": "2",
+    "authTypeDes": "网关鉴权",
+    "openId": "003JI1Jg1rmApSg6yG0ydUgLWZ4Bnx0rb4wtWLtyDRc0WAWoAUmE",
+    "token": "STsid0000001512438403572hQSEygBwiYc9fIw0vExdI4X3GMkI5UVw",
 }
 ```
 
