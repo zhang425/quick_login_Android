@@ -55,7 +55,6 @@ sdk技术问题沟通QQ群：609994083
 <uses-permission android:name="android.permission.SEND_SMS" />
 <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 **2. 配置授权登录activity**
@@ -171,7 +170,8 @@ public AuthnHelper (Context context)
 **openId：**每个APP每个手机号码对应唯一的openId。</br>
 
 **临时凭证token：**开发者服务端可凭临时凭证token通过3.1获取用户信息接口获取用户手机号码。
-**登录类型分显式登录（一键登录）和隐式登录2个类型。
+
+**登录类型分显式登录（一键登录）和隐式登录2个类型**
 
 </br>
 
@@ -183,11 +183,11 @@ public AuthnHelper (Context context)
 
 ![](image/19.png)
 
-SDK自动调起登录等待界面（图一），同时自动获取本机号码；若获取本机号码成功，自动切换到授权登录页面（图二），用户授权登录后，即可使用本机号码进行登录；若用户获取本机号码失败，自动跳转到短信验证码登录页面（图三），引导用户使用短信验证码登录。
+SDK自动弹出登录缓冲界面（图一，<font  style="color:blue; font-style:italic;">预取号成功将不会弹出缓冲页</font>），同时自动获取本机号码；若获取本机号码成功，自动切换到授权登录页面（图二），用户授权登录后，即可使用本机号码进行登录；若用户获取本机号码失败，自动跳转到短信验证码登录页面（图三，<font  style="color:blue; font-style:italic;">开发者可以选择是否跳到SDK提供的短信验证页面</font>），引导用户使用短信验证码登录。
 
 ![](image/20.png)
 
-用户授权登录后，给开发者返回`token`和`用户ID(openID)`等信息。 
+用户授权登录后，统一认证平台将`token`和`用户ID(openID)`等信息返回到应用服务端。 
 
 </br>
 
@@ -261,7 +261,7 @@ mAuthnHelper.umcLoginByType(Constant.APP_ID,
 
 #### 2.2.2.1. 方法描述
 
-使用显式登录前，可以通过预取号提前获取用户信息并缓存。用户再次登录时，会自动使用缓存的信息快速登录来获取`token`和`用户ID(openID)`等信息。提高登录速度，缓存的有效时间是5min并且只有一次使用有效期。
+使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。用户使用一键登录时，会优先使用缓存的信息快速请求SDK服务端获取`token`和`用户ID(openID)`等信息。提高登录速度，缓存的有效时间是5min并且只能使用一次。
 
 </br>
 
@@ -320,7 +320,7 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
 
 #### 2.2.3.1. 方法描述
 
-用户打开APP，直接完成登录，不需要用户确认，仅提供伪码给业务侧，无法获取 用户手机号码，PS：不支持短信上行。
+本方法用于实现本机号码校验功能。开发者通过隐式登录方法，无授权弹窗，可获取到token和openID，应用服务端凭token向SDK服务端请求校验是否本机号码。隐式取号失败后，不支持短信上行和短信验证码二次验证功能。
 
 </br>
 
@@ -350,13 +350,13 @@ public void getTokenImp(final String appId,
 
 OnGetTokenComplete的参数JSONObject，含义如下：
 
-| 字段         | 类型      | 含义                                 |
-| ---------- | ------- | ---------------------------------- |
-| resultCode | Int     | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
-| authType   | Int | 登录类型。                      |
-| authTypeDes   | String | 登录类型中文描述。                      |
-| openId   | String | 成功返回:用户身份唯一标识。                      |
-| token   | String | 成功返回:临时凭证。                      |
+| 字段          | 类型     | 含义                                 |
+| ----------- | ------ | ---------------------------------- |
+| resultCode  | Int    | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
+| authType    | Int    | 登录类型。                              |
+| authTypeDes | String | 登录类型中文描述。                          |
+| openId      | String | 成功返回:用户身份唯一标识。                     |
+| token       | String | 成功返回:临时凭证。                         |
 
 </br>
 
@@ -380,35 +380,23 @@ mAuthnHelper.getTokenImp(Constant.APP_ID, Constant.APP_KEY,mListener);
 }
 ```
 
-## 2.3. 授权页界面配置说明
+## 2.3. 资源界面配置说明
 
 SDK登录授权页支持部分元素开发者自定义</br>
 
-###2.3.1. 标题
+###2.3.1. buffer页面
 
 SDK自动读取APP名称，如航班管家，标题栏显示的文字内容为“登录航班管家”
 
-###2.3.2. 自定义logo 
+###2.3.2. 授权页面 
 
-开发者自定义logo时，需考虑终端适配问题
+![logo](image/auth-page.png)
 
-![logo](image/logo.png)
+### 2.3.3. 短信验证码页面
 
-### 2.3.3. 登录按钮文案
-
-![button-text](image/button-text.png)
-
-### 2.3.4. 登录按钮颜色
-
-![button-color](image/button-color.png)
-
-
-
-
+![button-text](image/sms-page.png)
 
 <div STYLE="page-break-after: always;"></div>
-
-
 
 # 3. 平台接口说明
 
