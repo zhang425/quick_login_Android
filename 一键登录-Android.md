@@ -126,11 +126,8 @@ mListener = new TokenListener() {
 **3. 接口调用**
 
 ```java
-mAuthnHelper.umcLoginByType(Constant.APP_ID, 
-        Constant.APP_KEY, 
-        AuthnHelper.UMC_LOGIN_IMPLICIT,
-        AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_WAP, 
-        mListener);
+mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
+                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS+ AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_SMS, mListener);
 ```
 
 
@@ -194,9 +191,8 @@ SDK自动弹出登录缓冲界面（图一，<font  style="color:blue; font-styl
 **原型**
 
 ```java
-public void umcLoginByType(final String appId, 
+public void getTokenExp(final String appId, 
             final String appKey,
-            final int loginType, 
             final String authType, 
             final TokenListener listener)
 ```
@@ -237,11 +233,8 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 **请求示例代码**
 
 ```java
-mAuthnHelper.umcLoginByType(Constant.APP_ID, 
-        Constant.APP_KEY,
-        AuthnHelper.UMC_LOGIN_DISPLAY, 
-        AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_WAP, 
-        mListener);
+mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
+                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS+ AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_SMS, mListener);
 ```
 
 **响应示例代码**
