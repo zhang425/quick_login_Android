@@ -160,25 +160,73 @@ public AuthnHelper (Context context)
 
 </br>
 
-## 2.2. 登录方法
+## 2.2. 预取号
 
-开发者向统一认证服务器获取用户身份标识`openId`和临时凭证`token`。</br>
+### 2.2.1. 方法描述
 
-**openID：**每个APP每个手机号码对应唯一的openId。</br>
+**功能**
 
-**临时凭证token：**开发者服务端可凭临时凭证token通过3.1获取用户信息接口获取用户手机号码。
-
-登录类型分**显式登录（一键登录）**和**隐式登录**2种类型
+使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。用户使用一键登录时，会优先使用缓存的信息快速请求SDK服务端获取`token`和`用户ID(openID)`等信息。提高登录速度，缓存的有效时间是5min并且只能使用一次。**注：预取号方法仅对显式登录有效。**
 
 </br>
 
-### 2.2.1. 显式登录
+**原型**
 
-#### 2.2.1.1. 方法描述
+```java
+public void umcLoginPre(final String appId, 
+            final String appKey,
+            final TokenListener listener)
+```
 
-**业务流程图**
+</br>
 
-![](image/19.png)
+### 2.2.2. 参数说明
+
+**请求参数**
+
+| 参数       | 类型            | 说明                                       |
+| :------- | :------------ | :--------------------------------------- |
+| appId    | String        | 应用的AppID                                 |
+| appkey   | String        | 应用密钥                                     |
+| listener | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
+
+</br>
+
+**响应参数**
+
+OnGetTokenComplete的参数JSONObject，含义如下：
+
+| 字段         | 类型      | 含义                                 |
+| ---------- | ------- | ---------------------------------- |
+| resultCode | Int     | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
+| desc       | boolean | 成功标识，true为成功。                      |
+
+</br>
+
+### 2.2.3. 示例
+
+**请求示例代码**
+
+```java
+mAuthnHelper.umcLoginPre(Constant.APP_ID, 
+        Constant.APP_KEY,
+        mListener);
+```
+
+**响应示例代码**
+
+```
+{
+    "resultCode": "103000",
+    "desc": "true",
+}
+```
+
+## 2.3. 显式登录
+
+### 2.3.1. 方法描述
+
+**功能**
 
 SDK自动弹出登录缓冲界面（图一，<font  style="color:blue; font-style:italic;">预取号成功将不会弹出缓冲页</font>），同时SDK将手机号码信息缓存；若获取用户本机号码成功，自动切换到授权登录页面（图二），用户授权登录后，即可使用本机号码进行登录；若用户获取本机号码失败，自动跳转到短信验证码登录页面（图三，<font  style="color:blue; font-style:italic;">开发者可以选择是否跳到SDK提供的短信验证页面</font>），引导用户使用短信验证码登录。
 
@@ -199,7 +247,7 @@ public void getTokenExp(final String appId,
 
 </br>
 
-#### 2.2.1.2. 参数说明
+### 2.3.2. 参数说明
 
 **请求参数**
 
@@ -228,7 +276,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 </br>
 
-#### 2.2.1.3. 示例
+### 2.3.3. 示例
 
 **请求示例代码**
 
@@ -250,68 +298,11 @@ mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
 
 </br>
 
-### 2.2.2. 预取号
+## 2.4. 隐式登录
 
-#### 2.2.2.1. 方法描述
+### 2.4.1. 方法描述
 
-使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。用户使用一键登录时，会优先使用缓存的信息快速请求SDK服务端获取`token`和`用户ID(openID)`等信息。提高登录速度，缓存的有效时间是5min并且只能使用一次。**注：预取号方法仅对显式登录有效。**
-
-</br>
-
-**原型**
-
-```java
-public void umcLoginPre(final String appId, 
-            final String appKey,
-            final TokenListener listener)
-```
-
-</br>
-
-#### 2.2.2.2. 参数说明
-
-**请求参数**
-
-| 参数       | 类型            | 说明                                       |
-| :------- | :------------ | :--------------------------------------- |
-| appId    | String        | 应用的AppID                                 |
-| appkey   | String        | 应用密钥                                     |
-| listener | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
-
-</br>
-
-**响应参数**
-
-OnGetTokenComplete的参数JSONObject，含义如下：
-
-| 字段         | 类型      | 含义                                 |
-| ---------- | ------- | ---------------------------------- |
-| resultCode | Int     | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
-| desc       | boolean | 成功标识，true为成功。                      |
-
-</br>
-
-#### 2.2.2.3. 示例
-
-**请求示例代码**
-
-```java
-mAuthnHelper.umcLoginPre(Constant.APP_ID, 
-        Constant.APP_KEY,
-        mListener);
-```
-
-**响应示例代码**
-
-```
-{
-    "resultCode": "103000",
-    "desc": "true",
-}
-```
-### 2.2.3. 隐式登录
-
-#### 2.2.3.1. 方法描述
+**功能**
 
 本方法用于实现**本机号码校验**功能。开发者通过隐式登录方法，无授权弹窗，可获取到token和openID，应用服务端凭token向SDK服务端请求校验是否本机号码。隐式取号失败后，不支持短信上行和短信验证码二次验证功能。注：隐式登录返回的token暂时无法通过`获取用户信息接口`换取手机号码。
 
@@ -327,7 +318,7 @@ public void getTokenImp(final String appId,
 
 </br>
 
-#### 2.2.3.2. 参数说明
+### 2.4.2. 参数说明
 
 **请求参数**
 
@@ -353,7 +344,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 </br>
 
-#### 2.2.3.3. 示例
+### 2.4.3. 示例
 
 **请求示例代码**
 
@@ -373,15 +364,15 @@ mAuthnHelper.getTokenImp(Constant.APP_ID, Constant.APP_KEY,mListener);
 }
 ```
 
-## 2.3. 资源界面配置说明
+## 2.5. 资源界面配置说明
 
 SDK**登录授权页**和**短信验证码页面**的布局文件已部分开放给开发者，支持部分元素和布局自定义，如开发者不需自定义，则使用SDK提供的默认样式</br>
 
-###2.3.1. 授权登录页面 
+###2.5.1. 授权登录页面 
 
 ![logo](image/auth-page.png)
 
-### 2.3.2. 短信验证码页面
+### 2.5.2. 短信验证码页面
 
 ![button-text](image/sms-page.png)
 
@@ -391,7 +382,11 @@ SDK**登录授权页**和**短信验证码页面**的布局文件已部分开放
 
 ## 3.1. 获取用户信息接口
 
-### 3.1.1. 接口说明
+### 3.1.1. 业务流程
+
+![](image/19.png)
+
+### 3.1.2. 接口说明
 
 **功能**
 
@@ -407,7 +402,7 @@ SDK**登录授权页**和**短信验证码页面**的布局文件已部分开放
 
 </br>
 
-### 3.1.2. 参数说明
+### 3.1.3. 参数说明
 
 **请求参数**
 
@@ -512,7 +507,24 @@ SDK**登录授权页**和**短信验证码页面**的布局文件已部分开放
 | sign          | String | 2     | 是                     | 签名，HMACSHA256( appId +     msgId + phonNum + timestamp + token + version)，输出64位大写字母 （注：“+”号为合并意思，不包含在被加密的字符串中,appkey为秘钥, 参数名做自然排序（Java是用TreeMap进行的自然排序）） |      |
 |               |        |       |                       |                                          |      |
 
+**响应参数**
+
+| 参数           | 层级    | 类型     | 约束   | 说明                                       |      |
+| ------------ | ----- | :----- | :--- | :--------------------------------------- | ---- |
+| **header**   | **1** |        | 必选   |                                          |      |
+| msgId        | 2     | string | 必选   | 对应的请求消息中的msgid                           |      |
+| timestamp    | 2     | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |      |
+| appId        | 2     | string | 必选   | 应用ID                                     |      |
+| resultCode   | 2     | string | 必选   | 规则参见具体接口返回码说明                            |      |
+| **body**     | **1** |        | 必选   |                                          |      |
+| resultDesc   | 2     | String | 必选   | 返回结果描述信息：<br/>000:是本机号码<br/>001:非本机号码<br/>102:参数无效<br/>108:无效的手机号<br/>302:签名校验不通过<br/>606:token校验失败<br/>999:系统异常<br/>102315：使用次数为0<br/>其中，000和001状态纳入计费次数 |      |
+| message      | 2     | String | 否    | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |      |
+| expandParams | 2     | String | 否    | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |      |
+|              |       |        |      |                                          |      |
+
 </br>
+
+### 3.2.4. 示例
 
 **请求示例**
 
@@ -537,21 +549,6 @@ SDK**登录授权页**和**短信验证码页面**的布局文件已部分开放
 ```
 
 
-
-**响应参数**
-
-| 参数           | 层级    | 类型     | 约束   | 说明                                       |      |
-| ------------ | ----- | :----- | :--- | :--------------------------------------- | ---- |
-| **header**   | **1** |        | 必选   |                                          |      |
-| msgId        | 2     | string | 必选   | 对应的请求消息中的msgid                           |      |
-| timestamp    | 2     | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |      |
-| appId        | 2     | string | 必选   | 应用ID                                     |      |
-| resultCode   | 2     | string | 必选   | 规则参见具体接口返回码说明                            |      |
-| **body**     | **1** |        | 必选   |                                          |      |
-| resultDesc   | 2     | String | 必选   | 返回结果描述信息：<br/>000:是本机号码<br/>001:非本机号码<br/>102:参数无效<br/>108:无效的手机号<br/>302:签名校验不通过<br/>606:token校验失败<br/>999:系统异常<br/>102315：使用次数为0<br/>其中，000和001状态纳入计费次数 |      |
-| message      | 2     | String | 否    | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |      |
-| expandParams | 2     | String | 否    | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |      |
-|              |       |        |      |                                          |      |
 
 **响应示例**
 
