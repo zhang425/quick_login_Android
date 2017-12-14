@@ -379,6 +379,27 @@ SDK**登录授权页**和**短信验证码页面**部分元素可供开发者编
 
 ![button-text](image/sms-page.png)
 
+### 2.5.3. 开发者自定义控件
+
+开发者可以在布局文件`umcsdk_login_authority.xml`、`umcsdk_oauth.xml`、`umcsdk_oauth.xml`中添加控件并添加事件，并为添加的控件绑定事件代码：</br>
+
+```java
+private RegistListener registListener;
+registListener = RegistListener.getInstance();
+registListener.add("test_tv", new CustomInterface() {
+    @Override
+    public void onClick(Context context) {
+        Toast.makeText(mContext, "this is custom view", Toast.LENGTH_SHORT).show();
+    }
+});
+```
+
+其中`registListener.add("test_tv",new CustomInterface(){})`第一个参数为所添加自定义控件的id，第二个参数为这个控件所要绑定的事件。注：此Context为applicationContext。
+
+
+
+
+
 <div STYLE="page-break-after: always;"></div>
 
 # 3. 平台接口说明
@@ -582,38 +603,23 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 使用SDK时，SDK会在认证结束后将结果回调给开发者，其中结果为JSONObject对象，其中resultCode为结果响应码，103000代表成功，其他为失败。成功时在根据token字段取出身份标识。失败时根据resultCode定位失败原因。
 
-| 返回码    | 返回码描述                  |
-| ------ | ---------------------- |
-| 103000 | 成功                     |
-| 102101 | 无网络                    |
-| 102102 | 网络异常                   |
-| 102223 | 数据解析异常                 |
-| 102121 | 用户取消认证                 |
-| 102505 | 业务未注册                  |
-| 102506 | 请求出错                   |
-| 102507 | 请求超时                   |
-| 102201 | 自动登陆失败                 |
-| 102202 | 应用签名失败                 |
-| 102203 | 输入参数错误                 |
-| 102204 | 正在gettoken处理           |
-| 102210 | 指定号码非本机号码              |
-| 102211 | 短信验证码验证成功后返回随机码为空      |
-| 102222 | http响应头中没有结果码          |
-| 102299 | other failed           |
-| 102302 | 调用service超时            |
-| 103117 | mac异常 macError         |
-| 103200 | ks无需更新                 |
-| 103203 | 缓存用户不存在                |
-| 200001 | imsi为空，跳到短信验证码登录       |
-| 200002 | imsi为空，没有短信验证码登录功能     |
-| 200003 | 复用中间件首次登录              |
-| 200004 | 复用中间件二次登录              |
-| 200005 | 用户未授权READ_PHONE_STATE  |
-| 200006 | 用户未授权SEND_SMS          |
-| 200007 | 不支持的认证方式跳到短信验证码登录      |
-| 200008 | 不支持的认证方式没有短信验证码登录功能    |
-| 200009 | 应用合法性校验失败              |
-| 200010 | imsi获取失败或者没有sim卡，预取号失败 |
+| 返回码    | 返回码描述                             |
+| ------ | --------------------------------- |
+| 103000 | 成功                                |
+| 102101 | 无网络                               |
+| 102102 | 网络异常                              |
+| 102223 | 数据解析异常                            |
+| 102121 | 用户取消登录                            |
+| 102507 | 请求超时，预取号、buffer页取号、登录时请求超时        |
+| 102203 | 输入参数错误                            |
+| 200001 | imsi为空，跳到短信验证码登录                  |
+| 200002 | 手机未安装sim卡                         |
+| 200005 | 用户未授权（READ_PHONE_STATE）           |
+| 200006 | 用户未授权（SEND_SMS）                   |
+| 200007 | authType仅使用短信验证码认证                |
+| 200008 | 1. authType参数为空；2. authType参数不合法； |
+| 200009 | 应用合法性校验失败                         |
+| 200010 | 预取号时imsi获取失败或者没有sim卡              |
 
 </br>
 
