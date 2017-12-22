@@ -274,7 +274,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | resultDesc  | String | 失败时返回：返回错误码说明                            |
 | authType    | String | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 |
 | authTypeDec | String | 认证类型描述，对应authType                        |
-| token       | String | 成功时返回：临时凭证                               |
+| token       | String | 成功时返回：临时凭证，token有效期5min，一次有效             |
 | openId      | String | 成功时返回：用户身份唯一标识                           |
 
 </br>
@@ -343,7 +343,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | authType    | Int    | 登录类型。                              |
 | authTypeDes | String | 登录类型中文描述。                          |
 | openId      | String | 成功返回:用户身份唯一标识。                     |
-| token       | String | 成功返回:临时凭证。                         |
+| token       | String | 成功返回:临时凭证，token有效期5min，一次有效        |
 
 </br>
 
@@ -757,3 +757,24 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 | 606    | 验证Token失败       |
 | 999    | 系统异常            |
 | 102315 | 次数已用完           |
+
+# 5. Q&A
+
+**1、SDK使用网络问题？**
+1. 在数据网络环境下，SDK可以正常从数据网关取号；
+2. 在wifi+数据网络环境下，SDK会调用方法强制将当前的数据通道切换到数据网络，再通过数据网关正常取号；
+3. 在纯wifi环境下，SDK无法取号，将跳转到短信上行（Android，如果打开开关）或短信验证码（如果打开开关）进行身份校验。
+
+**2、SDK支持三网运营商么？**
+
+1. 一键登录SDK支持三网运营商，但是由于联通接口问题，目前IOS版SDK无法获取联通用户的手机号码；
+2. 本机号码校验SDK仅支持中国移动用户的手机号码校验
+
+**3、OPPO终端网络问题**
+
+1. 由于oppo操作系统增加了应用的数据网络使用权限，在手机wifi和数据网络同时打开时，应用首次打开，将默认使用wifi数据通道，且无法通过SDK强制切换到数据通道取号，会导致取号失败；
+2. 用户必须在纯数据网络环境打开应用，用户授权应用使用数据网络权限后，SDK切换功能才能使用。
+
+**4、关于Android 5.0操作系统切换数据通道问题**
+
+1. Android 5.x操作系统普遍存在wifi切数据网络通道延时问题，导致取号超时
