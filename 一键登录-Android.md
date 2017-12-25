@@ -1,46 +1,25 @@
 # 1. 开发环境配置
 sdk技术问题沟通QQ群：609994083</br>
 
-**注：SDK在获取token过程中，用户手机必须在打开数据网络情况下才能获取成功，纯wifi环境下会自动跳转到SDK的短信验证码页面（如果有配置）或者返回错误码**
+**注：SDK在获取token过程中，用户手机必须在打开数据网络情况下才能成功，纯wifi环境下会自动跳转到SDK的短信验证码页面或短信上行取号（如果有配置）或者返回错误码**
 
 ## 1.1. 总体使用流程
 
 1. 调用SDK方法来获得`token`，步骤如下：
 
-    a.  构造SDK中认证工具类AuthnHelper的对象；</br>
-    b.  使用AuthnHelper中的umcLoginByType方法，获得token。</br>
+    a. 构造SDK中认证工具类`AuthnHelper`的对象；</br>
 
-2. 使用平台获取用户信息接口，取得用户信息
+    b. 使用预取号方法提前缓存取号数据（非必要）；</br>
 
-    </br>
+    c. 使用`AuthnHelper`中的`getTokenExp`或`getTokenImp`方法，获得token。</br>
 
-## 1.2. 新建工程并导入SDK的jar文件
+2. 在业务服务端调用`获取用户信息接口`或`本机号码校验接口`获取相关用户信息</br>
+
+## 1.2. 导入SDK的jar文件
 
 1. 将`quick_login_android_**.jar`拷贝到应用工程的libs目录下，如没有该目录，可新建；
 2. 将sdk所需要的证书文件`clientCert.crt`、`serverPublicKey.pem`拷贝到项目`assets`目录下。
-3. 将sdk所需要的资源文件从res目录下的文件添加到项目工程中，如图：
-
-`     anim`文件：
-
-![](image/14.png)
-
-`   drawable`、`drawable-xxhdpi`文件：
-
-![](image/15.png)
-
-</br>
-
-![](image/16.png)
-
-
-
-`layout`文件：
-
-![](image/17.png)
-
-`values`文件：
-
-![](image/18.png)
+3. 将sdk所需要的资源文件（anim, drawable, drawable-xxhdpi, layout, values文件，具体可参考demo工程）从res目录下的文件添加到项目工程中，如图：
 
 </br>
 
@@ -130,10 +109,8 @@ mListener = new TokenListener() {
 
 ```java
 mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
-                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS+ AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_SMS, mListener);
+                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_SMS, mListener);
 ```
-
-
 
 <div STYLE="page-break-after: always;"></div>
 
@@ -169,7 +146,7 @@ public AuthnHelper (Context context)
 
 **功能**
 
-使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。用户使用一键登录时，会优先使用缓存的信息快速请求SDK服务端获取`token`和`用户ID(openID)`等信息。提高登录速度，缓存的有效时间是5min并且只能使用一次。**注：预取号方法仅对显式登录有效。**
+使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。用户使用一键登录时，会优先使用缓存的信息快速请求SDK服务端获取`token`和`用户ID(openID)`等信息，提高登录速度。缓存的有效时间是5min并且只能使用一次。预取号成功后，如果用户成功进入授权页，但未授权给应用（未点一键登录按钮），并返回到上一级页面，预取号缓存将失效，预取号缓存失效后，用户再次使用显式登录时，将使用常规流程获取token信息。**注：预取号方法仅对显式登录有效。**
 
 </br>
 
@@ -201,7 +178,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 | 字段         | 类型      | 含义                                 |
 | ---------- | ------- | ---------------------------------- |
-| resultCode | Int     | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
+| resultCode | Int     | 接口返回码，“103000”为成功。具体返回码见4.1 SDK返回码 |
 | desc       | boolean | 成功标识，true为成功。                      |
 
 </br>
@@ -231,6 +208,10 @@ mAuthnHelper.umcLoginPre(Constant.APP_ID,
 
 **功能**
 
+显式登录即一键登录，本方法用于实现**获取用户信息**功能。使用本方法获取到的token，可通过`获取用户信息接口`交换用户信息。</br>
+
+**交互过程**
+
 SDK自动弹出登录缓冲界面（图一，<font  style="color:blue; font-style:italic;">预取号成功将不会弹出缓冲页</font>），同时SDK将手机号码信息缓存；若获取用户本机号码成功，自动切换到授权登录页面（图二），用户授权登录后，即可使用本机号码进行登录；若用户获取本机号码失败，自动跳转到短信验证码登录页面（图三，<font  style="color:blue; font-style:italic;">开发者可以选择是否跳到SDK提供的短信验证页面</font>），引导用户使用短信验证码登录。
 
 ![](image/20.png)
@@ -259,8 +240,18 @@ public void getTokenExp(final String appId,
 | appId     | String        | 应用的AppID                                 |
 | appkey    | String        | 应用密钥                                     |
 | loginType | String        | 登录类型，AuthnHelper.UMC_LOGIN_DISPLAY       |
-| authType  | String        | 认证类型,目前支持三种认证类型:<br />1.短信验证码：AuthnHelper.AUTH_TYPE_DYNAMIC_SMS（短信验证码关闭时，用户授权页右上角“切换账号”按钮将隐藏<br />2.网关鉴权：AuthnHelper.AUTH_TYPE_WAP<br />3.短信上行：AuthnHelper.AUTH_TYPE_SMS<br />（开发者可单独选择其中一种认证类型，也可以用“+”号组合同时使用三种认证类型，SDK登录认证优先级顺序为：网关鉴权 → 短信上行 → 短信验证码） <br />示例：AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_DYNAMIC_SMS |
+| authType  | String        | 认证类型，目前支持网关鉴权、短验和短信上行，网关鉴权是默认必选认证类型，短验和短信上行是开发者可选认证:</br>1.短信验证码：AuthnHelper.AUTH_TYPE_DYNAMIC_SMS</br>2.短信上行：AuthnHelper.AUTH_TYPE_SMS</br> 参数为空时，默认只选择网关鉴权方式取号 |
 | listener  | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
+
+**`authType`参数说明：**
+
+1. 开发者可单独选择其中一种认证类型，也可以用“+”号组合同时使用三种认证类型，**SDK登录认证优先级顺序为：网关鉴权 → 短信上行 → 短信验证码**。示例：`AuthnHelper.AUTH_TYPE_SMS + AuthnHelper.AUTH_TYPE_DYNAMIC_SMS`
+2. 一键登录（网关取号）失败后，将自动使用短信上行取号能力（如果`authType`参数包含短信上行能力）
+3. 一键登录和短信上行均失败时，将自动跳转到短信验证码页面（如果`authType`参数包含短验能力）
+4. 若开发者仅使用网关鉴权（`authType`为空），一键登录失败后，返回相对应的错误码
+5. 如果开发者需要自定义短验页面，`authType`参数不能包含短信验证码能力；
+6. 如果开发者在界面布局，未隐藏“切换账号”按钮，用户点击按钮时，仍然会跳转到SDK自带短验页面；
+7. 如果开发者未选短信验证码能力，但是没有把“`切换账号`”按钮隐藏，用户点击切换账号时，也会跳转到SDK自带的短信验证码页面
 
 </br>
 
@@ -307,7 +298,7 @@ mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
 
 **功能**
 
-本方法用于实现**本机号码校验**功能。开发者通过隐式登录方法，无授权弹窗，可获取到token和openID，应用服务端凭token向SDK服务端请求校验是否本机号码。隐式取号失败后，不支持短信上行和短信验证码二次验证功能。注：隐式登录返回的token暂时无法通过`获取用户信息接口`换取手机号码。
+本方法用于实现**本机号码校验**功能。开发者通过隐式登录方法，无授权弹窗，可获取到token和openID（需在开放平台勾选相关能力），应用服务端凭token向SDK服务端请求校验是否本机号码。隐式取号失败后，不支持短信上行和短信验证码二次验证。注：隐式登录返回的token无法通过`获取用户信息接口`换取手机号码，只支持通过`本机号码校验接口`校验用户手机号码身份。
 
 </br>
 
@@ -337,13 +328,13 @@ public void getTokenImp(final String appId,
 
 OnGetTokenComplete的参数JSONObject，含义如下：
 
-| 字段          | 类型     | 含义                                 |
-| ----------- | ------ | ---------------------------------- |
-| resultCode  | Int    | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码 |
-| authType    | Int    | 登录类型。                              |
-| authTypeDes | String | 登录类型中文描述。                          |
-| openId      | String | 成功返回:用户身份唯一标识。                     |
-| token       | String | 成功返回:临时凭证，token有效期5min，一次有效        |
+| 字段          | 类型     | 含义                                       |
+| ----------- | ------ | ---------------------------------------- |
+| resultCode  | Int    | 接口返回码，“103000”为成功。具体响应码见4.1 SDK返回码       |
+| authType    | Int    | 登录类型。                                    |
+| authTypeDes | String | 登录类型中文描述。                                |
+| openId      | String | 用户身份唯一标识（参数需在开放平台勾选相关能力后开放，如果勾选了一键登录能力，使用本方法时，不返回OpenID） |
+| token       | String | 成功返回:临时凭证，token有效期5min，一次有效              |
 
 </br>
 
@@ -396,15 +387,13 @@ registListener.add("test_tv", new CustomInterface() {
 
 其中`registListener.add("test_tv",new CustomInterface(){})`第一个参数为所添加自定义控件的id，第二个参数为这个控件所要绑定的事件。注：此Context为applicationContext。
 
-
-
-
-
 <div STYLE="page-break-after: always;"></div>
 
 # 3. 平台接口说明
 
 ## 3.1. 获取用户信息接口
+
+业务平台或服务端携带用户授权成功后的token来调用统一认证服务端获取用户手机号码等信息。**注：本接口仅适用于5.3.0及以上版本SDK**
 
 ### 3.1.1. 业务流程
 
@@ -413,10 +402,6 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 ![](image/19.png)
 
 ### 3.1.2. 接口说明
-
-**功能**
-
-业务平台或服务端携带用户授权成功后的token来调用统一认证服务端获取用户信息。**注：本接口仅适用于5.3.0及以上版本SDK**
 
 **请求地址：**https://www.cmpassport.com/unisdk/rsapi/loginTokenValidate
 
@@ -489,6 +474,9 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ## 3.2. 本机号码校验接口
 
+校验用户输入的号码是否本机号码。
+应用将手机号码传给统一认证SDK，统一认证SDK向统一认证服务端发起本机号码校验请求，统一认证服务端通过网关或者短信上行获取本机手机号码和第三方应用传输的手机号码进行校验，返回校验结果。</br>
+
 ### 3.2.1. 业务流程
 
 SDK在获取token过程中，用户手机必须在打开数据网络情况下才能获取成功，纯wifi环境下会自动跳转到SDK的短信验证码页面（如果有配置）或者返回错误码。**注：本业务目前仅支持中国移动号码，建议开发者在调用SDK的获取token方法前，判断当前用户手机运营商**
@@ -498,9 +486,6 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 </br>
 
 ### 3.2.2. 接口说明
-
-校验用户输入的号码是否本机号码。
-应用将手机号码传给统一认证SDK，统一认证SDK向统一认证服务端发起本机号码校验请求，统一认证服务端通过网关或者短信上行获取本机手机号码和第三方应用传输的手机号码进行校验，返回校验结果。</br>
 
 **调用次数说明：**本产品属于收费业务，开发者未签订服务合同前，每天总调用次数有限，详情可咨询商务。
 
