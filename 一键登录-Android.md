@@ -265,7 +265,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | resultDesc  | String | 失败时返回：返回错误码说明                            |
 | authType    | String | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 |
 | authTypeDec | String | 认证类型描述，对应authType                        |
-| token       | String | 成功时返回：临时凭证，token有效期5min，一次有效             |
+| token       | String | 成功时返回：临时凭证，token有效期2min，一次有效             |
 | openId      | String | 成功时返回：用户身份唯一标识                           |
 
 </br>
@@ -334,7 +334,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | authType    | Int    | 登录类型。                                    |
 | authTypeDes | String | 登录类型中文描述。                                |
 | openId      | String | 用户身份唯一标识（参数需在开放平台勾选相关能力后开放，如果勾选了一键登录能力，使用本方法时，不返回OpenID） |
-| token       | String | 成功返回:临时凭证，token有效期5min，一次有效              |
+| token       | String | 成功返回:临时凭证，token有效期2min，一次有效              |
 
 </br>
 
@@ -417,16 +417,16 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 **请求参数**
 
-| 参数           |   类型   |  约束  |      | 说明                                       |
-| :----------- | :----: | :--: | :--- | ---------------------------------------- |
-| version      | string |  必选  |      | 填2.0                                     |
-| msgid        | string |  必选  |      | 标识请求的随机数即可(1-36位)                        |
-| systemtime   | string |  必选  |      | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| strictcheck  | string |  必选  |      | 暂时填写"0"                                  |
-| appid        | string |  必选  |      | 业务在统一认证申请的应用id                           |
-| expandparams | string |  可选  |      | 扩展参数                                     |
-| sign         | string |  必选  |      | 签名，MD5（appid + version + msgid + systemtime + strictcheck + token + appkey)（注：“+”号为合并意思，不包含在被加密的字符串中） |
-| token        | string |  必选  |      | 需要解析的凭证值。                                |
+| 参数           |   类型   |  约束  | 说明                                       |
+| :----------- | :----: | :--: | ---------------------------------------- |
+| version      | string |  必选  | 填2.0                                     |
+| msgid        | string |  必选  | 标识请求的随机数即可(1-36位)                        |
+| systemtime   | string |  必选  | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| strictcheck  | string |  必选  | 暂时填写"0"                                  |
+| appid        | string |  必选  | 业务在统一认证申请的应用id                           |
+| expandparams | string |  可选  | 扩展参数                                     |
+| sign         | string |  必选  | 签名，MD5（appid + version + msgid + systemtime + strictcheck + token + appkey)（注：“+”号为合并意思，不包含在被加密的字符串中） |
+| token        | string |  必选  | 需要解析的凭证值。                                |
 
 </br>
 
@@ -503,37 +503,36 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 **请求参数**
 
-| 参数            | 类型     | 层级    | 约束                    | 说明                                       |      |
-| ------------- | ------ | ----- | --------------------- | ---------------------------------------- | ---- |
-| **header**    |        | **1** | 必选                    |                                          |      |
-| version       | string | 2     | 必选                    | 版本号,初始版本号1.0,有升级后续调整                     |      |
-| msgId         | string | 2     | 必选                    | 使用UUID标识请求的唯一性                           |      |
-| timestamp     | string | 2     | 必选                    | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |      |
-| appId         | string | 2     | 必选                    | 应用ID                                     |      |
-| **body**      |        | **1** | 必选                    |                                          |      |
-| openType      | String | 2     | 否，requestertype字段为0时是 | 运营商类型：</br>1:移动;</br>2:联通;</br>3:电信;</br>0:未知 |      |
-| requesterType | String | 2     | 是                     | 请求方类型：</br>0:APP；</br>1:WAP              |      |
-| message       | String | 2     | 否                     | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |      |
-| expandParams  | String | 2     | 否                     | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |      |
-| phoneNum      | String | 2     | 是                     | 待校验的手机号码的64位sha256值，字母大写。（手机号码 + appKey + timestamp）（注：“+”号为合并意思） |      |
-| token         | String | 2     | 是                     | 身份标识，字符串形式的token                         |      |
-| sign          | String | 2     | 是                     | 签名，HMACSHA256( appId +     msgId + phonNum + timestamp + token + version)，输出64位大写字母 （注：“+”号为合并意思，不包含在被加密的字符串中,appkey为秘钥, 参数名做自然排序（Java是用TreeMap进行的自然排序）） |      |
-|               |        |       |                       |                                          |      |
+| 参数            | 类型     | 层级    | 约束                    | 说明                                       |
+| ------------- | ------ | ----- | --------------------- | ---------------------------------------- |
+| **header**    |        | **1** | 必选                    |                                          |
+| version       | string | 2     | 必选                    | 版本号,初始版本号1.0,有升级后续调整                     |
+| msgId         | string | 2     | 必选                    | 使用UUID标识请求的唯一性                           |
+| timestamp     | string | 2     | 必选                    | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| appId         | string | 2     | 必选                    | 应用ID                                     |
+| **body**      |        | **1** | 必选                    |                                          |
+| openType      | String | 2     | 否，requestertype字段为0时是 | 运营商类型：</br>1:移动;</br>2:联通;</br>3:电信;</br>0:未知 |
+| requesterType | String | 2     | 是                     | 请求方类型：</br>0:APP；</br>1:WAP              |
+| message       | String | 2     | 否                     | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |
+| expandParams  | String | 2     | 否                     | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |
+| phoneNum      | String | 2     | 是                     | 待校验的手机号码的64位sha256值，字母大写。（手机号码 + appKey + timestamp）（注：“+”号为合并意思） |
+| token         | String | 2     | 是                     | 身份标识，字符串形式的token                         |
+| sign          | String | 2     | 是                     | 签名，HMACSHA256( appId +     msgId + phonNum + timestamp + token + version)，输出64位大写字母 （注：“+”号为合并意思，不包含在被加密的字符串中,appkey为秘钥, 参数名做自然排序（Java是用TreeMap进行的自然排序）） |
+|               |        |       |                       |                                          |
 
 **响应参数**
 
-| 参数           | 层级    | 类型     | 约束   | 说明                                       |      |
-| ------------ | ----- | :----- | :--- | :--------------------------------------- | ---- |
-| **header**   | **1** |        | 必选   |                                          |      |
-| msgId        | 2     | string | 必选   | 对应的请求消息中的msgid                           |      |
-| timestamp    | 2     | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |      |
-| appId        | 2     | string | 必选   | 应用ID                                     |      |
-| resultCode   | 2     | string | 必选   | 规则参见4.3平台返回码                             |      |
-| **body**     | **1** |        | 必选   |                                          |      |
-| resultDesc   | 2     | String | 必选   | 描述参见4.3平台返回码                             |      |
-| message      | 2     | String | 否    | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |      |
-| expandParams | 2     | String | 否    | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |      |
-|              |       |        |      |                                          |      |
+| 参数           | 层级    | 类型     | 约束   | 说明                                       |
+| ------------ | ----- | :----- | :--- | :--------------------------------------- |
+| **header**   | **1** |        | 必选   |                                          |
+| msgId        | 2     | string | 必选   | 对应的请求消息中的msgid                           |
+| timestamp    | 2     | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| appId        | 2     | string | 必选   | 应用ID                                     |
+| resultCode   | 2     | string | 必选   | 规则参见4.3平台返回码                             |
+| **body**     | **1** |        | 必选   |                                          |
+| resultDesc   | 2     | String | 必选   | 描述参见4.3平台返回码                             |
+| message      | 2     | String | 否    | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |
+| expandParams | 2     | String | 否    | 扩展参数格式：param1=value1\|param2=value2  方式传递，参数以竖线 \| 间隔方式传递，此参数需urlencode编码。 |
 
 </br>
 
