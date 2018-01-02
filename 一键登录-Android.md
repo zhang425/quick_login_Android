@@ -265,7 +265,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | resultDesc  | String | 失败时返回：返回错误码说明                            |
 | authType    | String | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 |
 | authTypeDec | String | 认证类型描述，对应authType                        |
-| token       | String | 成功时返回：临时凭证，token有效期2min，一次有效             |
+| token       | String | 成功时返回：临时凭证，token有效期2min，一次有效；同一用户（手机号）10分钟内获取token且未使用的数量不超过30个 |
 | openId      | String | 成功时返回：用户身份唯一标识                           |
 
 </br>
@@ -334,7 +334,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | authType    | Int    | 登录类型。                                    |
 | authTypeDes | String | 登录类型中文描述。                                |
 | openId      | String | 用户身份唯一标识（参数需在开放平台勾选相关能力后开放，如果勾选了一键登录能力，使用本方法时，不返回OpenID） |
-| token       | String | 成功返回:临时凭证，token有效期2min，一次有效              |
+| token       | String | 成功返回:临时凭证，token有效期2min，一次有效，同一用户（手机号）10分钟内获取token且未使用的数量不超过30个 |
 
 </br>
 
