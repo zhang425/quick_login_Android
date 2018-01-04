@@ -283,7 +283,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 ```java
 mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
-                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_WAP + AuthnHelper.AUTH_TYPE_SMS, mListener);
+                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_SMS, mListener);
 ```
 
 **响应示例代码**
@@ -459,12 +459,12 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    "strictcheck": "1",
+    "strictcheck": "0",
     "version": "2.0",
     "msgid": "40a940a940a940a93b8d3b8d3b8d3b8d",
     "systemtime": "20170515090923489",
     "appid": "10000001",
-    "token": "XXXXXXXXXXXXXX",
+    "token": "STsid0000001511507964636aeSvb1onYHKHSfx0NoVVXgQeglEgH5LT",
     "sign": "dfdiopurteinekw"
 }
 ```
@@ -476,7 +476,7 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
     "resultcode": "103000",
     "inresponseto": "40a940a940a940a93b8d3b8d3b8d3b8d",
     "openID": "0000000",
-    "msisdn": "13680000795",
+    "msisdn": "13680000000",
     "systemtime": "20170522204845598"
 }
 ```
@@ -553,21 +553,19 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-  "body": {
-    "openType": "1", 
-    "requesterType": "1", 
-    "message ": "", 
-	"expandParams": "",
-    "phoneNum": "4526285940b6fa7fef49e1dcb04ee944f41a8745444015daf2771bfb7ad7c800", 
-    "token": "", 
-    "sign": ""
-    }, 
-  "header": {
-    "msgId ": "61237890345", 
-    "timestamp ": "20160628180001165", 
-    "version ": "2.0", 
-    "appId ": "0008"
-  }
+    "header":{
+        "appId":"3000*****401",
+        "timestamp":"20180104090953788",
+        "version":"1.0",
+        "msgId":"8ADFF305-C7FC-B3E1-B1AE-CC130792FBD0"
+    },
+    "body":{
+        "openType":"1",
+        "token":"STsid0000001515028196605yc1oYNTuPlTlLT10AR3ywr2WApEq14JH",
+        "sign":"227716D80112F953632E4AFBB71C987E9ABF4831ACDA5A7464E2D8F61F0A9477",
+     "phoneNum":"38D19FF8CE10416A6F3048467CB6F7D57A44407CB198C6E8793FFB87FEDFA9B8",
+        "requesterType":"0"
+    }
 }
 ```
 
@@ -577,16 +575,16 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-  "body": {
-    "resultDesc ": "", 
-    "message": "", 
-    "expandParams ": ""
-    }, 
-   "header": {
-    "msgId": "61237890345", 
-    "timestamp": "20160628180001165", 
-    "resultCode": "000"
-  }
+    "body":{
+        "message":"",
+        "resultDesc":"是本机号码"
+    },
+    "header":{
+        "appId":"3000*****40",
+        "msgId":"8ADFF305-C7FC-B3E1-B1AE-CC130792FBD0",
+        "resultCode":"000",
+        "timestamp":"20180104090957277"
+    }
 }
 ```
 
@@ -598,23 +596,23 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 使用SDK时，SDK会在认证结束后将结果回调给开发者，其中结果为JSONObject对象，其中resultCode为结果响应码，103000代表成功，其他为失败。成功时在根据token字段取出身份标识。失败时根据resultCode定位失败原因。
 
-| 返回码    | 返回码描述                             |
-| ------ | --------------------------------- |
-| 103000 | 成功                                |
-| 102101 | 无网络                               |
-| 102102 | 网络异常                              |
-| 102103 | 未开启数据网络                           |
-| 102121 | 用户取消登录                            |
-| 102223 | 数据解析异常                            |
-| 102203 | 输入参数错误                            |
-| 102507 | 请求超时，预取号、buffer页取号、登录时请求超时        |
-| 200002 | 手机未安装sim卡                         |
-| 200005 | 用户未授权（READ_PHONE_STATE）           |
-| 200006 | 用户未授权（SEND_SMS）                   |
-| 200007 | authType仅使用短信验证码认证                |
-| 200008 | 1. authType参数为空；2. authType参数不合法； |
-| 200009 | 应用合法性校验失败                         |
-| 200010 | 预取号时imsi获取失败或者没有sim卡              |
+| 返回码    | 返回码描述                               |
+| ------ | ----------------------------------- |
+| 103000 | 成功                                  |
+| 102101 | 无网络                                 |
+| 102102 | 网络异常                                |
+| 102103 | 未开启数据网络                             |
+| 102121 | 用户取消登录                              |
+| 102223 | 数据解析异常                              |
+| 102203 | 输入参数错误                              |
+| 102507 | 请求超时，预取号、buffer页取号、登录时请求超时          |
+| 200002 | 手机未安装sim卡                           |
+| 200005 | 用户未授权（READ_PHONE_STATE）             |
+| 200006 | 用户未授权（SEND_SMS）                     |
+| 200007 | authType仅使用短信验证码认证                  |
+| 200008 | 1. authType参数为空；2. authType参数不合法；   |
+| 200009 | 应用合法性校验失败（包名包签名未填写正确/未在开发者平台勾选相关能力） |
+| 200010 | 预取号时imsi获取失败或者没有sim卡                |
 </br>
 
 ##4.2. 获取用户信息接口返回码
