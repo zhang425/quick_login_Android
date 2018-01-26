@@ -400,6 +400,33 @@ registListener.add("test_tv", new CustomInterface() {
 
 其中`registListener.add("test_tv",new CustomInterface(){})`第一个参数为所添加自定义控件的id，第二个参数为这个控件所要绑定的事件。注：此Context为applicationContext。
 
+**PS:授权页面关闭配置：** 
+
+在授权页umcsdk_login_authority.xml中添加自定义控件，id命名为umcskd_authority_finish。 
+
+```java
+<TextView
+android:id="@+id/umcskd_authority_finish"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="关闭页面"
+android:textColor="#0080cc"
+android:textSize="30sp"/>
+```
+
+通过注册自定义控件的方式添加事件，执行完操作之后如下例子中toast "finish"之后授权页会自动关闭。 
+
+```java
+private RegistListener registListener;
+registListener = RegistListener.getInstance();
+registListener.add("umcskd_authority_finish", new CustomInterface() {
+@Override
+public void onClick(Context context) {
+Toast.makeText(mContext, "finish", Toast.LENGTH_SHORT).show();
+}
+});
+```
+
 <div STYLE="page-break-after: always;"></div>
 
 # 3. 平台接口说明
