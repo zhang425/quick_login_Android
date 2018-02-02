@@ -447,7 +447,7 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 **协议：** HTTPS 
 
-**请求方法：** POST+json
+**请求方法：** POST+json,Content-type设置为application/json
 
 **回调地址：**请参考开发者接入流程文档
 
@@ -457,16 +457,17 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 **请求参数**
 
-| 参数           |   类型   |  约束  | 说明                                       |
-| :----------- | :----: | :--: | ---------------------------------------- |
-| version      | string |  必选  | 填2.0                                     |
-| msgid        | string |  必选  | 标识请求的随机数即可(1-36位)                        |
-| systemtime   | string |  必选  | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| strictcheck  | string |  必选  | 暂时填写"0"                                  |
-| appid        | string |  必选  | 业务在统一认证申请的应用id                           |
-| expandparams | string |  可选  | 扩展参数                                     |
-| sign         | string |  必选  | 签名，MD5（appid + version + msgid + systemtime + strictcheck + token + appkey)（注：“+”号为合并意思，不包含在被加密的字符串中） |
-| token        | string |  必选  | 需要解析的凭证值。                                |
+| 参数                  |   类型   |  约束  | 说明                                       |
+| :------------------ | :----: | :--: | :--------------------------------------- |
+| version             | string |  必选  | 填2.0                                     |
+| msgid               | string |  必选  | 标识请求的随机数即可(1-36位)                        |
+| systemtime          | string |  必选  | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| strictcheck         | string |  必选  | 暂时填写"0"                                  |
+| appid               | string |  必选  | 业务在统一认证申请的应用id                           |
+| expandparams        | string |  可选  | 扩展参数                                     |
+| token               | string |  必选  | 需要解析的凭证值。                                |
+| sign                | string |  必选  | 当**encryptionalgorithm≠"RSA"**时，sign = MD5（appid + version + msgid + systemtime + strictcheck + token + appkey)（注：“+”号为合并意思，不包含在被加密的字符串中），输出32位大写字母；</br>当**encryptionalgorithm="RSA"**，业务端RSA私钥签名（appid+token）, 服务端使用业务端提供的公钥验证签名（公钥可以在开发者社区配置）。 |
+| encryptionalgorithm | string |  可选  | 开发者如果需要使用非对称加密算法时，填写“RSA”。（当该值不设置为“RSA”时，执行MD5签名校验） |
 
 </br>
 
@@ -477,7 +478,6 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 | inresponseto | string | 必选   | 对应的请求消息中的msgid                           |
 | systemtime   | string | 必选   | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
 | resultcode   | string | 必选   | 返回码                                      |
-| openID       | string | 必选   | 用户身份唯一标识                                 |
 | msisdn       | string | 可选   | 表示手机号码                                   |
 
 </br>
@@ -488,13 +488,13 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    "strictcheck": "0",
-    "version": "2.0",
-    "msgid": "40a940a940a940a93b8d3b8d3b8d3b8d",
-    "systemtime": "20170515090923489",
-    "appid": "10000001",
-    "token": "STsid0000001511507964636aeSvb1onYHKHSfx0NoVVXgQeglEgH5LT",
-    "sign": "dfdiopurteinekw"
+    appid = 3000******76;
+    msgid = 335e06a28f064b999d6a25e403991e4c;
+    sign = 213EF8D0CC71548945A83166575DFA68;
+    strictcheck = 1;
+    systemtime = 20180129112955435;
+    token = STsid0000001517196594066OHmZvPMBwn2MkFxwvWkV12JixwuZuyDU;
+    version = "2.0";
 }
 ```
 
@@ -502,11 +502,10 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    "resultcode": "103000",
-    "inresponseto": "40a940a940a940a93b8d3b8d3b8d3b8d",
-    "openID": "0000000",
-    "msisdn": "13680000000",
-    "systemtime": "20170522204845598"
+    inresponseto = 335e06a28f064b999d6a25e403991e4c;
+    msisdn = 147******10;
+    resultCode = 103000;
+    systemtime = 20180129112955477;
 }
 ```
 
@@ -533,7 +532,7 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 **协议：** HTTPS
 
-**请求方法：** POST+json
+**请求方法：** POST+json,Content-type设置为application/json
 
 **回调地址：**请参考开发者接入流程文档
 
@@ -586,19 +585,19 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    "header":{
-        "appId":"3000*****401",
-        "timestamp":"20180104090953788",
-        "version":"1.0",
-        "msgId":"8ADFF305-C7FC-B3E1-B1AE-CC130792FBD0"
-    },
-    "body":{
-        "openType":"1",
-        "token":"STsid0000001515028196605yc1oYNTuPlTlLT10AR3ywr2WApEq14JH",
-        "sign":"227716D80112F953632E4AFBB71C987E9ABF4831ACDA5A7464E2D8F61F0A9477",
-     "phoneNum":"38D19FF8CE10416A6F3048467CB6F7D57A44407CB198C6E8793FFB87FEDFA9B8",
-        "requesterType":"0"
-    }
+    body =     {
+        openType = 1;
+        phoneNum =0A2050AC434A32DE684745C829B3DE570590683FAA1C9374016EF60390E6CE76;
+        requesterType = 0;
+        sign = 87FCAC97BCF4B0B0D741FE1A85E4DF9603FD301CB3D7100BFB5763CCF61A1488;
+        token = STsid0000001517194515125yghlPllAetv4YXx0v6vW2grV1v0votvD;
+    };
+    header =     {
+        appId = 3000******76;
+        msgId = f11585580266414fbde9f755451fb7a7;
+        timestamp = 20180129105523519;
+        version = "1.0";
+    };
 }
 ```
 
@@ -608,16 +607,16 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    "body":{
-        "message":"",
-        "resultDesc":"是本机号码"
-    },
-    "header":{
-        "appId":"3000*****40",
-        "msgId":"8ADFF305-C7FC-B3E1-B1AE-CC130792FBD0",
-        "resultCode":"000",
-        "timestamp":"20180104090957277"
-    }
+    body =     {
+        message = "";
+        resultDesc = "\U662f\U672c\U673a\U53f7\U7801";
+    };
+    header =     {
+        appId = 3000******76;
+        msgId = f11585580266414fbde9f755451fb7a7;
+        resultCode = 000;
+        timestamp = 20180129105523701;
+    };
 }
 ```
 
@@ -804,7 +803,3 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 **4、关于Android 5.0操作系统切换数据通道问题**
 
 1. Android 5.x操作系统普遍存在wifi切数据网络通道延时问题，导致取号超时
-
-**5、关于非移动卡短信验证码问题**
-
-1. 目前由于电信联通未给统一认证开放短信验证端口，电信联通用户在使用短验时，验证码将从统一认证的移动号码池自动生成并下发到用户手机，用户将收到由中国移动手机号码（非短信端口）下发的短信验证码，用户可能会有疑虑，部分安全软件也可能会对短信进行拦截。开发者如果不希望联通电信用户通过此通道接收短信验证码，可以在调用显式登录方法时屏蔽SDK自带的短信验证码改用开发者自己的短验功能，或者只针对移动用户使用SDK自带的短验功能，而联通和电信使用开发者自己的短验功能。
