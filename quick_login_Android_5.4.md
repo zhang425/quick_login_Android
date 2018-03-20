@@ -184,14 +184,98 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 **请求示例代码**
 
 ```java
-
+mAuthnHelper.getSimInfo(mListener);
 ```
 
 **响应示例代码**
 
 ```
+{
+	"resultCode": "103000",
+	"resultDesc": "获取SIM卡信息成功",
+	"isDualSim": "false",
+	"sim1Operator": "移动",
+	"sim2Operator": "未知",
+	"defaultDataSimId": "1",
+	"loginMethod": "getSimInfo"
+}
+```
+
+## 2.3. 预取号方法
+
+### 2.3.1. 方法描述
+
+**功能**
+
+使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。双卡形态下，预取号获取的用户信息是当前流量卡的信息。
+
+**判断逻辑：**
+
+1、当前用户未保存中间件时，走正常流程
+
+2、当前中间件信息与流量卡一致时，直接返回中间件里面的信息（返回码，掩码，返回码描述等）
+
+3、当前中间件信息与流量卡不一致时：
+
+​	1）调用成功。返回成功，清除旧中间件，并更新为当前流量卡的中间件。
+
+​	2）调用失败。不清除中间件，不更新中间件。
+
+4、有中间件没上网卡、当前网络是wifi或者无网络，返回失败，不清除中间件，不更新中间件。
+
+**原型**
+
+```java
+public void umcLoginPre(int umcLoginPreTimeOut, 
+                        final TokenListener listener) 
+```
+
+
+
+### 2.3.2. 参数说明
+
+**请求参数**
+
+| 参数               | 类型          | 说明                                |
+| ------------------ | ------------- | ----------------------------------- |
+| umcLoginPreTimeOut | Int           | 预取号超时时间，默认10000，单位毫秒 |
+| listener           | TokenListener | 回调监听器                          |
+
+**响应参数**
+
+| 参数          | 类型   | 说明                                |
+| ------------- | ------ | ----------------------------------- |
+| resultCode    | String | 预取号超时时间，默认10000，单位毫秒 |
+| resultDesc    | String | 回调监听器                          |
+| securityphone | String | 手机号掩码，如“138XXXX0000”         |
+| openId        | String | 用户唯一标识                        |
+| loginMethod   | String | 登录方法                            |
+
+### 2.3.3. 示例
+
+**请求示例**
 
 ```
+mAuthnHelper.umcLoginPre(5000, mListener);
+```
+
+
+
+**返回示例**
+
+```
+{
+	"resultCode": "103000", 	//返回码
+	"resultDesc": "true", 	    //返回码描述
+	"securityphone": "138****5380", 	//手机号掩码
+	"openId": "9M7RaoZH1Z23Gw0ll_nuIE6D7qDjEmjnj_DXARN1JObalKy3Uygg",
+	"loginMethod": "umcLoginPre"
+}
+```
+
+
+
+
 
 ## 2.3. 隐式登录
 
@@ -246,12 +330,28 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 **请求示例代码**
 
 ```java
+/*
+  public static final String AUTH_TYPE_USER_PASSWD = "1";//用户名密码
+  public static final String AUTH_TYPE_DYNAMIC_SMS = "2";//短信验证码
+  public static final String AUTH_TYPE_WAP = "3";//网关鉴权
+  public static final String AUTH_TYPE_SMS = "4";//短信上行
+  */
+mAuthnHelper.getTokenImp(mLoginType, AuthnHelper.AUTH_TYPE_SMS, mListener);
 
 ```
 
 **响应示例代码**
 
 ```
+{
+	"resultCode": "103000",
+	"authType": "1",
+	"authTypeDes": "WIFI下网关鉴权",
+	"selectSim": "1",
+	"securityphone": "188****7241",
+	"openId": "BcLpJvyI1GZSQffq1AHXsL0bqmIfNs6_XALVMNsdvozIl3XufPo4",
+	"token": "84840100013602003A4D7A6330517A6846515556434E30453052454E464E45457A40687474703A2F2F3132302E3139372E3233352E32373A383038302F72732F40303103000405A0ED3D040012383030313230313731313135313034373036050010AC042E4B80D8447490DC06746F77522F06000131070003323030FF0020AE3E9EC069A700B06087E608AC273721076A50336F4D001EF2C99EE6AF2CC9EA"
+}
 
 ```
 
@@ -304,12 +404,23 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 **请求示例代码**
 
 ```java
-
+AuthnHelper.getInstance(this).sendSMS(phoneNum, new TokenListener() {
+    @Override
+    public void onGetTokenComplete(JSONObject jsonobj) {
+        
+    }
+});
 ```
 
 **响应示例代码**
 
 ```
+{
+	"resultCode": "103000",
+	"servertime": "63",
+	"randomnum": "FD90EC6FA013428B8990A65071F1B0D5",
+	"desc": "success"
+}
 
 ```
 
@@ -354,6 +465,35 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | resultCode  | String | 接口返回码，“103000”为成功。 |
 | authType    | String | 验证类型，“7”，短信验证码验证   |
 | authTypeDes | String | 认证类型描述，对应authType  |
+
+### 2.5.3. 示例
+
+**请求示例**
+
+```
+AuthnHelper.getInstance(this).getTokenSms(phoneNum, authCode, new TokenListener() {
+    @Override
+    public void onGetTokenComplete(JSONObject jsonobj) {
+    }
+});
+
+```
+
+**响应示例**
+
+```
+{
+	"resultCode": "103000",
+	"authType": "7",
+	"authTypeDes": "短信验证码",
+	"selectSim": "1",
+	"openId": "acKnXqzR1cPy0u2-Ube4SEAli8l2TR8uvTSsZs-VoAfNT-64-MZc",
+	"token": "84840100013602003A524459784E554D32526A517A4D4456464E455531517A4A4240687474703A2F2F3132302E3139372E3233352E32373A383038302F72732F403032030004027E456B040012383030313230313731313135313034373036050010123E4C3ADE32486FB81F3BBFE80515E706000132070003323030FF00208671B8955BED3053B53E18AE6B9F346F1E92944F4AF153AE875EFC941B4DA976"
+}
+
+```
+
+
 
 </br>
 
