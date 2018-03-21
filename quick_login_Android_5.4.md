@@ -277,9 +277,9 @@ mAuthnHelper.umcLoginPre(5000, mListener);
 
 
 
-## 2.3. 隐式登录
+## 2.4. 隐式登录
 
-### 2.3.1. 方法描述
+### 2.4.1. 方法描述
 
 **功能**
 
@@ -297,7 +297,7 @@ public void getTokenImp(int loginType,
 
 </br>
 
-### 2.3.2. 参数说明
+### 2.4.2. 参数说明
 
 **请求参数**
 
@@ -325,7 +325,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 </br>
 
-### 2.3.3. 示例
+### 2.4.3. 示例
 
 **请求示例代码**
 
@@ -357,9 +357,9 @@ mAuthnHelper.getTokenImp(mLoginType, AuthnHelper.AUTH_TYPE_SMS, mListener);
 
 </br>
 
-## 2.4. 获取短信验证码
+## 2.5. 获取短信验证码
 
-### 2.4.1. 方法描述
+### 2.5.1. 方法描述
 
 **功能**
 
@@ -376,7 +376,7 @@ public void sendSMS(String phoneNum,
 
 </br>
 
-### 2.4.2. 参数说明
+### 2.5.2. 参数说明
 
 **请求参数**
 
@@ -399,7 +399,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 
 </br>
 
-### 2.4.3. 示例
+### 2.5.3. 示例
 
 **请求示例代码**
 
@@ -424,9 +424,9 @@ AuthnHelper.getInstance(this).sendSMS(phoneNum, new TokenListener() {
 
 ```
 
-## 2.5. 短信验证码登录
+## 2.6. 短信验证码登录
 
-### 2.5.1. 方法描述
+### 2.6.1. 方法描述
 
 **功能**
 
@@ -444,7 +444,7 @@ public void getTokenSms(final String phoneNum,
 
 </br>
 
-### 2.5.2. 参数说明
+### 2.6.2. 参数说明
 
 **请求参数**
 
@@ -466,7 +466,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 | authType    | String | 验证类型，“7”，短信验证码验证   |
 | authTypeDes | String | 认证类型描述，对应authType  |
 
-### 2.5.3. 示例
+### 2.6.3. 示例
 
 **请求示例**
 
@@ -497,9 +497,9 @@ AuthnHelper.getInstance(this).getTokenSms(phoneNum, authCode, new TokenListener(
 
 </br>
 
-## 2.6. 清除中间件缓存
+## 2.7. 清除中间件缓存
 
-### 2.6.1. 方法描述
+### 2.7.1. 方法描述
 
 **功能**
 
