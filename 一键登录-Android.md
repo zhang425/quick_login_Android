@@ -234,9 +234,9 @@ SDK自动弹出登录缓冲界面（图一，<font  style="color:blue; font-styl
 
 ```java
 public void getTokenExp(final String appId, 
-            final String appKey,
-            final String authType, 
-            final TokenListener listener)
+                        final String appKey, 
+                        AuthClickListener click,
+                        final TokenListener listener)
 ```
 
 </br>
@@ -245,13 +245,12 @@ public void getTokenExp(final String appId,
 
 **请求参数**
 
-| 参数        | 类型            | 说明                                       |
-| :-------- | :------------ | :--------------------------------------- |
-| appId     | String        | 应用的AppID                                 |
-| appkey    | String        | 应用密钥                                     |
-| loginType | String        | 登录类型，AuthnHelper.UMC_LOGIN_DISPLAY       |
-| authType  | String        | 认证类型，目前支持网关鉴权、短验和短信上行，网关鉴权是默认必选认证类型，短验和短信上行是开发者可选认证:</br>1.短信验证码：AuthnHelper.AUTH_TYPE_DYNAMIC_SMS</br>2.短信上行：AuthnHelper.AUTH_TYPE_SMS</br> 参数为空时，默认只选择网关鉴权方式取号 |
-| listener  | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
+| 参数     | 类型              | 说明                                                         |
+| :------- | :---------------- | :----------------------------------------------------------- |
+| appId    | String            | 应用的AppID                                                  |
+| appkey   | String            | 应用密钥                                                     |
+| click    | AuthClickListener | 开发者自定义按钮事件类，用于定义用户点击授权按钮后的事件。   |
+| listener | TokenListener     | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
 
 **`authType`参数说明：**
 
@@ -284,8 +283,12 @@ OnGetTokenComplete的参数JSONObject，含义如下：
 **请求示例代码**
 
 ```java
-mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY,
-                 AuthnHelper.AUTH_TYPE_DYNAMIC_SMS + AuthnHelper.AUTH_TYPE_SMS, mListener);
+mAuthnHelper.getTokenExp(Constant.APP_ID, Constant.APP_KEY, new AuthClickListener() {
+    @Override
+    public void onClick() {
+       //用户自己的业务
+    }
+}, mListener);
 ```
 
 **响应示例代码**
@@ -519,7 +522,7 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
     appid = 3000******76;
     msgid = 335e06a28f064b999d6a25e403991e4c;
     sign = 213EF8D0CC71548945A83166575DFA68;
-    strictcheck = 1;
+    strictcheck = 0;
     systemtime = 20180129112955435;
     token = STsid0000001517196594066OHmZvPMBwn2MkFxwvWkV12JixwuZuyDU;
     version = "2.0";
