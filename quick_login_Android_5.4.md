@@ -296,7 +296,7 @@ public void getTokenImp(int loginType,
 
 | 参数        | 类型            | 说明                                       |
 | :-------- | :------------ | :--------------------------------------- |
-| loginType | Int           | 登录方式：</br>LOGIN_TYPE_DEFAULT = 0:默认登录方式，登录优先级为：中间件 -> 上网卡 -> 上网卡短信上行（无上网卡获取手机主卡） -> 短信验证码；</br>LOGIN_TYPE_SIM1 = 1:使用SIM1登录；</br>LOGIN_TYPE_SIM2 = 2:使用SIM2登录；</br>LOGIN_TYPE_CMCC_FIRST = 3:使用移动卡优先登录；</br>LOGIN_TYPE_WAP = 4:使用上网卡登录 |
+| loginType | Int           | 登录方式：</br>LOGIN_TYPE_DEFAULT = 0:默认登录方式，登录优先级为：中间件 -> 上网卡 -> 上网卡短信上行（无上网卡获取手机主卡） -> 短信验证码；</br>LOGIN_TYPE_SIM1 = 1:使用SIM1登录；</br>LOGIN_TYPE_SIM2 = 2:使用SIM2登录；</br>LOGIN_TYPE_CMCC_FIRST = 3:使用移动卡优先登录；</br>LOGIN_TYPE_WAP = 4:使用上网卡登录；</br> 当有进行预取号的时候，推荐使用 LOGIN_TYPE_DEFAULT 默认登录方式 |
 | authType  | String        | 认证方式：</br>AUTH_TYPE_WAP = "3":网关鉴权；</br>AUTH_TYPE_SMS = "4":短信上行 |
 | listener  | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
 
@@ -329,7 +329,7 @@ OnGetTokenComplete的参数JSONObject，含义如下：
   public static final String AUTH_TYPE_WAP = "3";//网关鉴权
   public static final String AUTH_TYPE_SMS = "4";//短信上行
   */
-mAuthnHelper.getTokenImp(mLoginType, AuthnHelper.AUTH_TYPE_SMS, mListener);
+mAuthnHelper.getTokenImp(AuthnHelper.LOGIN_TYPE_DEFAULT , AuthnHelper.AUTH_TYPE_SMS, mListener);
 
 ```
 
