@@ -207,21 +207,14 @@ mAuthnHelper.getSimInfo(mListener);
 
 **功能**
 
-使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。双卡形态下，预取号获取的用户信息是当前流量卡的信息。
+使用SDK登录前，可以通过预取号方法提前获取用户信息并缓存。
 
 **判断逻辑：**
 
-1、当前用户未保存中间件时，走正常流程
+1、当前用户未保存中间件时或中间件失效，走正常流程
 
-2、当前中间件信息与流量卡一致时，直接返回中间件里面的信息（返回码，掩码，返回码描述等）
+2、当前中间件信息有效时，直接返回中间件里面的信息（返回码，掩码，返回码描述等）
 
-3、当前中间件信息与流量卡不一致时：
-
-​	1）调用成功。返回成功，清除旧中间件，并更新为当前流量卡的中间件。
-
-​	2）调用失败。不清除中间件，不更新中间件。
-
-4、有中间件没上网卡、当前网络是wifi或者无网络，返回失败，不清除中间件，不更新中间件。
 
 **原型**
 
@@ -245,8 +238,8 @@ public void umcLoginPre(int umcLoginPreTimeOut,
 
 | 参数          | 类型   | 说明                                |
 | ------------- | ------ | ----------------------------------- |
-| resultCode    | String | 预取号超时时间，默认10000，单位毫秒 |
-| resultDesc    | String | 回调监听器                          |
+| resultCode    | String | 返回码 |
+| resultDesc    | String | 返回码描述  |
 | securityphone | String | 手机号掩码，如“138XXXX0000”         |
 | openId        | String | 用户唯一标识                        |
 | loginMethod   | String | 登录方法                            |
@@ -266,7 +259,7 @@ mAuthnHelper.umcLoginPre(5000, mListener);
 ```
 {
 	"resultCode": "103000", 	//返回码
-	"resultDesc": "true", 	    //返回码描述
+	"resultDesc": "预取号成功", 	    //返回码描述
 	"securityphone": "138****5380", 	//手机号掩码
 	"openId": "9M7RaoZH1Z23Gw0ll_nuIE6D7qDjEmjnj_DXARN1JObalKy3Uygg",
 	"loginMethod": "umcLoginPre"
@@ -303,7 +296,7 @@ public void getTokenImp(int loginType,
 
 | 参数        | 类型            | 说明                                       |
 | :-------- | :------------ | :--------------------------------------- |
-| loginType | Int           | 登录方式：</br>LOGIN_TYPE_DEFAULT = 0:默认登录方式，登录优先级为：中间件 -> 上网卡 -> SIM1短信上行 -> SIM2短信上行 -> 短信验证码；</br>LOGIN_TYPE_SIM1 = 1:使用SIM1登录；</br>LOGIN_TYPE_SIM2 = 2:使用SIM2登录；</br>LOGIN_TYPE_CMCC_FIRST = 3:使用移动卡优先登录；</br>LOGIN_TYPE_WAP = 4:使用上网卡登录 |
+| loginType | Int           | 登录方式：</br>LOGIN_TYPE_DEFAULT = 0:默认登录方式，登录优先级为：中间件 -> 上网卡 -> 上网卡短信上行（无上网卡获取手机主卡） -> 短信验证码；</br>LOGIN_TYPE_SIM1 = 1:使用SIM1登录；</br>LOGIN_TYPE_SIM2 = 2:使用SIM2登录；</br>LOGIN_TYPE_CMCC_FIRST = 3:使用移动卡优先登录；</br>LOGIN_TYPE_WAP = 4:使用上网卡登录 |
 | authType  | String        | 认证方式：</br>AUTH_TYPE_WAP = "3":网关鉴权；</br>AUTH_TYPE_SMS = "4":短信上行 |
 | listener  | TokenListener | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
 
@@ -710,6 +703,7 @@ http://wap.cmpassport.com:8080/uniapi/uniTokenValidate
 | 200033 | 复用中间件获取Token失败                           |
 | 200034 | 预取号token失效                               |
 | 200035 | 协商ks失败                                   |
+| 200036 | 预取号失败                                   |
 
 </br>
 
