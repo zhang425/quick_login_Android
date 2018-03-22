@@ -516,7 +516,7 @@ SDK在获取token过程中，用户手机必须在打开数据网络情况下才
 
 ```
 {
-    appid = 3000******76;
+    appid = 3000******76; 
     msgid = 335e06a28f064b999d6a25e403991e4c;
     sign = 213EF8D0CC71548945A83166575DFA68;
     strictcheck = 0;
