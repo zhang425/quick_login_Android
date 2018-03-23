@@ -252,15 +252,6 @@ public void getTokenExp(final String appId,
 | click    | AuthClickListener | 开发者自定义按钮事件类，用于定义用户点击授权按钮后的事件。   |
 | listener | TokenListener     | TokenListener为回调监听器，是一个java接口，需要调用者自己实现；TokenListener是接口中的认证登录token回调接口，OnGetTokenComplete是该接口中唯一的抽象方法，即void OnGetTokenComplete(JSONObject  jsonobj) |
 
-**`authType`参数说明：**
-
-1. 开发者可单独选择其中一种认证类型，也可以用“+”号组合同时使用三种认证类型，**SDK登录认证优先级顺序为：网关取号 → 短信上行 → 短信验证码**。示例：`AuthnHelper.AUTH_TYPE_SMS + AuthnHelper.AUTH_TYPE_DYNAMIC_SMS`
-2. 一键登录（网关取号）失败后，将自动使用短信上行取号能力（如果`authType`参数包含短信上行能力），从网关取号切换到短信上行取号**需要用户发送短信权限**，取得权限后，切换过程无感知
-3. 网关取号和短信上行均失败时，将自动跳转到短信验证码页面（如果`authType`参数包含短验能力）
-4. 若开发者仅使用网关鉴权（`authType`为null），一键登录失败后，返回相应的错误码
-5. 如果开发者需要自定义短验页面，`authType`参数不能包含短信验证码能力；
-6. 如果开发者在授权页面布局中未隐藏“切换账号”按钮，用户点击按钮时，仍然会跳转到SDK自带的短验页面，因此，开发者如果完全不想使用SDK自带的短验功能，建议把“切换账号”隐藏。
-
 </br>
 
 **响应参数**
