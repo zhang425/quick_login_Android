@@ -543,6 +543,7 @@ http://wap.cmpassport.com:8080/uniapi/uniTokenValidate
 | ------------------- | ---- | ---- | ------ | ---------------------------------------- |
 | header              | 必选   | 1    |        |                                          |
 | version             | 必选   | 2    | string | 填1.0                                     |
+| strictcheck         | 必选   | 2    | string | 填0                                     |
 | msgid               | 必选   | 2    | string | 标识请求的随机数即可(1-36位)                        |
 | systemtime          | 必选   | 2    | string | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
 | id                  | 必选   | 2    | string | 融合版sdk token校验时，该字段填appId                |
@@ -595,6 +596,7 @@ http://wap.cmpassport.com:8080/uniapi/uniTokenValidate
 		"idtype": "1",
 		"id": "300011012484",
 		"apptype": "5",
+		"strictcheck": "0",
 		"version": "1.0",
 		"sign": "4368018959d0e51b8aafd26193c2e8b4",
 		"systemtime": "20180227193858817"
