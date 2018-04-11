@@ -540,8 +540,7 @@ http://wap.cmpassport.com:8080/uniapi/uniTokenValidate
 | msgid               | 必选   | 2    | string | 标识请求的随机数即可(1-36位)                        |
 | systemtime          | 必选   | 2    | string | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
 | id                  | 必选   | 2    | string | sourceId或appId。临时凭证校验时，id必须为sourceid               |
-| idtype              | 必选   | 2    | string | id类型：0：sourceid 1:appid。临时凭证校验时，idtype必须为0；
-融合sdk token校验时，如果使用开放平台申请的appid，就应该使用appid，否则校验会失败，如果是用杭研系统申请的sourceid和sourcekey，就应该传入sourceid（目前是对内接入全部使用sourceid进行token校验）                 |
+| idtype              | 必选   | 2    | string | id类型：0：sourceid 1:appid。临时凭证校验时，idtype必须为0；融合sdk token校验时，如果使用开放平台申请的appid，就应该使用appid，否则校验会失败，如果是用杭研系统申请的sourceid和sourcekey，就应该传入sourceid（目前是对内接入全部使用sourceid进行token校验）                 |
 | apptype             | 必选   | 2    | string | app类型：1:BOSS</br> 2:web</br> 3:wap</br> 4:pc客户端</br> 5:手机客户端 |
 | userip              | 可选   | 2    | string | 客户端用户来源ip                                |
 | message             | 可选   | 2    | string | 接入方预留参数，该参数会透传给通知接口，此参数需urlencode编码      |
