@@ -1,7 +1,7 @@
 # 1. 开发环境配置
 sdk技术问题沟通QQ群：609994083</br>
 
-**注：SDK在获取token过程中，用户手机必须在打开数据网络情况下才能成功，纯wifi环境下会自动跳转到SDK的短信验证码页面或短信上行取号（如果有配置）或者返回错误码**
+**注：SDK在首次获取token过程中，用户手机必须在打开数据网络情况下才能成功，纯wifi环境下会自动进行短信上行取号（如果有配置，目前只支持移动号码）或者返回错误码**
 
 ## 1.1. 总体使用流程
 
@@ -40,15 +40,8 @@ sdk技术问题沟通QQ群：609994083</br>
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
 
-**2. 配置授权登录activity**
 
-示列代码为`unspecified`（默认值由系统选择显示方向）
-
-```java
-<activity android:name=".activity.SMSAuthActivity"></activity>
-```
-
-通过以上两个步骤，工程就已经配置完成了。接下来就可以在代码里使用统一认证的SDK进行开发了
+通过以上步骤，工程就已经配置完成了。接下来就可以在代码里使用统一认证的SDK进行开发了
 
 </br>
 
